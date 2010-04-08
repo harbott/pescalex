@@ -41,9 +41,13 @@ SITE_ID = 1
 USE_I18N = False
 USE_L10N = False
 
+# Get project path automatically
+from os import path as os_path
+PROJECT_PATH = os_path.abspath(os_path.split(__file__)[0])
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = PROJECT_PATH + '/media'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -57,10 +61,6 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 's^z3!+--avc%pifu38k0zmnlzkisqqz!23tc!b&)e3i+$@1(ec'
-
-# Get project path automatically
-from os import path as os_path
-PROJECT_PATH = os_path.abspath(os_path.split(__file__)[0])
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -109,8 +109,10 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Handle file uploads
-FILE_UPLOAD_TEMP_DIR = PROJECT_PATH + 'temp'
+FILE_UPLOAD_TEMP_DIR = PROJECT_PATH + '/temp/'
 FILE_UPLOAD_PERMISSIONS = 0777
+
+UPLOADS_ROOT = PROJECT_PATH +  '/uploads/'
 
 # Domain name
 DOMAIN_NAME = 'http://www.pescalex.org'
