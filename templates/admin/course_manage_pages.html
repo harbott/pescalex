@@ -1,0 +1,272 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/forms.css" />{% endblock %}
+{% load i18n %}
+
+{% block title %}{{ course.name }} | Pages{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="../../../../">{% trans "Home" %}</a> &rsaquo;
+    <a href="../../../">{% trans "Courses" %}</a> &rsaquo;
+    <a href="../../">{{ course.name }}</a> &rsaquo;
+    {% trans 'Manage Pages' %}
+</div>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script> 
+<script type="text/javascript" src="/media/plugins/jstree/jquery.tree.js"></script> 
+            
+
+<script type="text/javascript">
+    
+    var the_tree = false;
+    var current_li = false;
+
+        
+    function save_tree()
+    {
+         //console.log('calling save_tree');
+         //console.log($(the_tree.get()).html());
+
+         var current_tree = $(the_tree.get()).clone();
+         // clean the style attributes first.
+         current_tree.find('ul, li').removeAttr('style').removeAttr('language_id'); 
+         current_tree.find('ul, li a').removeClass('clicked');
+         
+         $.post('{% url admin_courses_save_tree course.id %}', {tree:current_tree.html()}, function(data){
+            if(data.substring(0,4) == 'err:')
+            {
+                alert(data.substring(4));
+            }
+         });        
+    }
+
+
+   function remove_page()
+   {
+        if (confirm('Are you sure? This will also delete the pages for all other languages.'))
+        {
+            if(current_li == false)
+            {
+                return current_li;
+            }
+
+            // when deleting a page it can also contain multiple pages (a sub tree...)
+            // so we take care of this here.
+            var pages_to_delete = [$(current_li).attr('page_id')]
+            
+            $(current_li).find('li').each(function(){
+                // add pages.
+                pages_to_delete.push($(this).attr('page_id'))
+            })
+            
+            //console.log(pages_to_delete)
+            
+            $.post('/admin/courses/course/remove_page/', {pages:pages_to_delete}, function(data){
+                if(data.substring(0,3) == 'ok:')
+                {
+                    $.tree.focused().remove();
+                    save_tree();                    
+                }
+                else
+                {
+                    alert(data);
+                }
+            });
+            
+            
+        }
+   }
+   
+   function edit_page()
+   {    
+        var page_id         = $(current_li).attr('page_id');
+        var language_id     = $(current_li).attr('language_id');
+        
+        // redirect
+        window.location = '/admin/courses/course/edit_content/'+page_id+'/'+language_id+'/'        
+        
+   }
+
+    function add_page()
+    {
+        if(the_tree == false)
+        {
+            initTree();
+        }
+        $.post('{% url admin_courses_add_page course.id %}', {}, function(data){        
+            if(data.substring(0,3) == 'ok:')
+            {
+                $node = $.tree.focused().create({data:'New Page...', attributes:{'page_id':data.substring(3), 'language_id':{{ language_id }} } }, -1);
+                // save the tree.
+                save_tree();                
+                return;
+            }
+            
+            // error ?
+            alert(data);
+            
+        });
+        
+    }
+
+
+    function initTree()
+    {
+    
+        the_tree = $("#basic_tree").tree({
+        
+            types : {
+                // all node types inherit the "default" node type
+                "default" : {
+                    deletable : true,
+                    renameable : true,
+                    max_children : -1,
+                    max_depth : -1,				
+                    valid_children : "all",
+                    icon : { 
+                        image : "/media/plugins/jstree/demo/file.png"
+                    }                
+                },
+                "root" : {
+                    deletable : true,
+                    renameable : true,
+                    max_children : -1,
+                    max_depth : -1,				
+                    valid_children : "all",
+                    icon : { 
+                        image : "/media/plugins/jstree/demo/file.png"
+                    }
+                },
+                "file" : {
+                    // the following three rules basically do the same
+                    deletable : true,
+                    renameable : true,                    
+                    valid_children : "all",
+                    max_children : -1,
+                    max_depth : -1,
+                    icon : { 
+                        image : "/media/plugins/jstree/demo/file.png"
+                    }
+                }
+            },
+            
+            ui : 
+            {
+                animation:200
+            },
+        
+            callback : {
+                onload : function () { 
+                    //console.log("Loaded"); 
+                },
+                onchange : function () { 
+                    //console.log("Focus changed");
+                },
+                onselect : function(node, tree)
+                {
+                    current_li = node;
+                    //console.log($(node).attr('edit_url'));
+                },
+                onmove : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
+                    var $tmp_tree = $('<div>' + TREE_OBJ.get() + '</div>');
+                    
+                    save_tree();
+                    
+                    console.log('-----------------');
+                    
+                    $tmp_tree.find('li').each(function(){
+                        if($(this).parent().is('ul'))
+                        {
+                            var tmp_str = '   ';
+                            var ii = 0;
+                            var parents_num = $(this).parents('ul').size();
+                            
+                            for(ii = 0; ii < parents_num; ii++)
+                            {
+                                tmp_str += '   ';
+                            }
+                             
+                            console.log(tmp_str + $(this).find('a:first').text());
+                        }
+                        else
+                        {
+                            console.log($(this).find('a:first').text());
+                        }                        
+                    });
+                },
+                
+                ondblclk: function(NODE, TREE_OBJ) { 
+                    TREE_OBJ.toggle_branch.call(TREE_OBJ, NODE);
+                    TREE_OBJ.select_branch.call(TREE_OBJ, NODE);
+                    $.tree.focused().rename();
+                },
+                
+                onrename : function (NODE, TREE_OBJ, RB) {
+                   var new_label    = TREE_OBJ.get_text(NODE);
+                   var page_id      = $(NODE).attr('page_id');
+                   var language_id  = $(NODE).attr('language_id');
+                   
+                   $.post('/admin/courses/course/set_language_label/'+page_id+'/'+language_id+'/', {label:new_label}, function(data){
+                        if(data.substring(0,3) != 'ok:')
+                        {
+                            alert(data);
+                        }
+                   });
+                   
+                }
+            }
+        });
+
+    } // initTree 
+
+
+
+$(function () {
+
+    // set the language for each li.
+    
+    var li_sizes = $("#basic_tree ul li").size();
+    var ii = 0;
+    var page_ids = Array();
+    
+    $('#basic_tree ul li').each(function(){    
+        $me                 = $(this);        
+        $me.attr('language_id', {{ language_id }})        
+        var language_id     = {{ language_id }};
+        var page_id         = $me.attr('page_id'); 
+        page_ids.push(page_id);
+    });
+    
+    $.getJSON('{% url admin_get_language_labels %}', {language_id:{{ language_id}}, pages:page_ids} , function(data){
+       
+        $.each(data, function(i,item){
+            $('#basic_tree ul li[page_id='+i+']').find('a').html('<ins>&nbsp;</ins>'+item); 
+        })
+        initTree();
+    });
+    
+    
+});
+
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>{{ course }}</h1>
+
+
+{% if error %}
+    <p class="errornote">
+       
+    </p>
+{% endif %}
+    <input type="button" value="Add New Page" onclick="add_page()">
+    <input type="button" value="Edit Content" onclick="edit_page()">    
+    <input type="button" value="Remove Selected Page" onclick="remove_page()">    
+    <br />    <br />
+	<div id="basic_tree">
+	    {{ course.get_html_tree|safe }}
+	</div>
+<div class="clear"></div>
+{% endblock %}

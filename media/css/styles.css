@@ -1,0 +1,12 @@
+/* Tables */
+.listing { margin:0 0 25px 0; width:100%; }
+.listing th { background-color:#F3F9F9; padding:10px; text-align:left; }
+.listing td { padding:3px 10px 3px 10px; background-color: #E9F3F4; }
+.listing td.action { padding:3px; }
+.listing a, .listing a:link, .tableDisplay a:active { text-decoration:underline; }
+.listing img a, .listing img a:link, .listing img a:active { text-decoration:none; }
+
+/* Glossaries */
+#glossary_results { float: left; display: inline; width: 240px; }
+#glossary_alphabet { float: left; display: inline;  width: 20px; }
+#glossary_term { float: left; display: inline; width: 450px; }

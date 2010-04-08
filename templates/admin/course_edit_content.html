@@ -1,0 +1,57 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/forms.css" />{% endblock %}
+{% load i18n %}
+
+{% block title %}{{ course_page_content.get_name }} | Editing content{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="../../../../">{% trans "Home" %}</a> &rsaquo;
+    <a href="../../../">{% trans "Courses" %}</a> &rsaquo;
+    {% trans 'Editing content of '  %} {{ course_page_content.get_name }}
+</div>
+{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script> 
+<script type="text/javascript" src="/media/plugins/tinymce/jquery.tinymce.js"></script> 
+<script type="text/javascript" src="/media/plugins/tinymceadmin/textareas.js"></script> 
+            
+
+<script type="text/javascript">
+function save_content()
+{
+     $.post('{% url admin_save_content course_page_content.id %}', {new_content:$('textarea').html()}, function(data){
+        if(data.substring(0,3) == 'ok:')
+        {
+            $obj = $('h2#msg').before('<h2 style="color:#006E2E">Saved</h2>');
+            $obj.prev().fadeOut(900, function(){
+                $(this).remove();
+            });
+            return true;
+        }
+        // error ?
+        alert(data);        
+     });
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>{{ course }}</h1>
+
+
+{% if error %}
+    <p class="errornote">
+       
+    </p>
+{% endif %}
+    <div>
+        <h2 id="msg">{% trans 'Editing:'  %} {{ course_page_content.get_name }} ({{ language.name }})</h2>
+        <div>
+            <textarea id="tiny_editable" style="width:500px; height:400px;">{{ course_page_content.content|safe }}</textarea>
+        </div>
+        <br />
+        <input type="button" value="Save content" onclick="save_content()" />
+        <input type="button" value="Cancel" onclick="history.back(-1)" />
+    </div>    
+{% endblock %}

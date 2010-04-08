@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Glossaries{% endblock %}
+
+{% block content %}
+<!-- Results pane -->
+<div id="glossary_results">
+    <h2>Search Results</h2>
+    <p>
+        Number of Results: {{ results.count }}
+    </p>
+    <form method="get" name="search" action="{% url glossary_list glossary_id,language_slug %}">
+        <input type="text" name="search" value="{{ search }}" size="20" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="term" value="{{ term_id }}" />
+    </form>
+    
+    {% for result in results %}
+        <p><a href="{% url glossary_list glossary_id,language_slug %}?search={{ search }}&amp;term={{ result.term_id }}">{{ result.term }}</a></p>
+    {% empty %}
+        <p>Sorry, no results were returned</p>
+    {% endfor %}
+</div>
+
+<!-- Alphabet chooser -->
+<div id="glossary_alphabet">
+    {% for letter in alphabet %}
+        <p><a href="{% url glossary_list glossary_id,language_slug %}?search={{ letter }}&amp;term={{ term_id }}">{{ letter }}</a></p>
+    {% endfor %}
+</div>
+
+<!-- Display term -->
+<div id="glossary_term">
+    <h1>{{ term.term }}</h1>
+    <h4>Definition</h4>
+    <p>{{ term.definition }}</p>
+    <p>
+        {% for lang in term.glossary.languages.all %}
+            <a href="{% url glossary_list glossary_id,lang.slug %}?search={{ search }}&amp;term={{ term_id }}">{{ lang.name }}</a>
+        {% endfor %}
+    </p>
+</div>
+{% endblock %}

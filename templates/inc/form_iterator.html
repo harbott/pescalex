@@ -1,0 +1,20 @@
+<fieldset class="module aligned">
+{% for field in form %}
+  {% if not field.is_hidden %}
+	<div class="form-row">
+	  {{ field.errors }}
+	  
+	  <label for="id_{{ field.html_name }}">
+           {{ field.label }}{% if field.field.required %}*{% endif %}
+      </label>
+	  <br />
+	  {{ field }}  
+	  {% if field.help_text %}
+            {{ field.help_text }}
+       {% endif %}
+	</div>
+  {% endif %}	
+{% endfor %}
+</fieldset>
+
+

@@ -1,0 +1,146 @@
+[
+	{
+    	"model": "glossaries.Glossary",
+    	"pk": 1,
+    	"fields": 
+    	{
+      		"name": "Pescalex",
+      		"languages": [1,2,3,4,5,10,7,8,9]
+    	}
+  	},
+	{
+    	"model": "glossaries.Glossary",
+    	"pk": 2,
+    	"fields": 
+    	{
+      		"name": "Aqualex",
+      		"languages": [1,2,12,3,4,5,13]
+    	}
+  	},
+	{
+    	"model": "glossaries.Glossary",
+    	"pk": 3,
+    	"fields": 
+    	{
+      		"name": "Marine Pollution",
+      		"languages": [1,4,10,11]
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 1,
+    	"fields": 
+    	{
+      		"name": "English",
+      		"slug":"en"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 2,
+    	"fields": 
+    	{
+      		"name": "French",
+      		"slug":"fr"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 3,
+    	"fields": 
+    	{
+      		"name": "Spanish",
+      		"slug":"es"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 4,
+    	"fields": 
+    	{
+      		"name": "Greek",
+      		"slug":"gr"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 5,
+    	"fields": 
+    	{
+      		"name": "Norwegian",
+      		"slug":"no"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 6,
+    	"fields": 
+    	{
+      		"name": "Polish",
+      		"slug":"po"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 7,
+    	"fields": 
+    	{
+      		"name": "Hugarian",
+      		"slug":"hu"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 8,
+    	"fields": 
+    	{
+      		"name": "Turkish",
+      		"slug":"tr"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 9,
+    	"fields": 
+    	{
+      		"name": "Gallic",
+      		"slug":"ga"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 10,
+    	"fields": 
+    	{
+      		"name": "Portuguese",
+      		"slug":"pt"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 11,
+    	"fields": 
+    	{
+      		"name": "Swedish",
+      		"slug":"sw"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 12,
+    	"fields": 
+    	{
+      		"name": "German",
+      		"slug":"de"
+    	}
+  	},
+  	{
+    	"model": "languages.Language",
+    	"pk": 13,
+    	"fields": 
+    	{
+      		"name": "Italian",
+      		"slug":"it"
+    	}
+  	}
+]

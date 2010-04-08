@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Recovering password{% endblock %}
+
+{% block content %}
+<h1>Recover</h1>
+
+{% if form.errors|length %}
+	<div id="errorMessage"><p>Sorry we do not recognise that email address</p></div>
+{% endif %}
+
+{% if message %}
+    <div id="successMessage"><p>{{ message }}</p></div>
+{% endif %}
+
+<form action="" method="post">
+	{% include 'inc/form_iterator.html' %}
+	<input type="submit" value="Send my password" class="submit" />
+	{% csrf_token %}
+</form>
+{% endblock %}

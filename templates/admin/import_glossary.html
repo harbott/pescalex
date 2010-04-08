@@ -1,0 +1,50 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/forms.css" />{% endblock %}
+{% load i18n %}
+
+{% block title %}Import Excel{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     <a href="../../">{% trans "Home" %}</a> &rsaquo;
+    <a href="../">{% trans " Glossaries "%}</a> &rsaquo;
+    {% trans 'Import Excel' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<!--<h1>Attention your message will be sent to {{ qs.count }} subscriber(s)</h1>-->
+<h1>Import {{ item.name }} CSV File</h1>
+<p>Each language import should be in a separate CSV file.</p>
+
+{% if error %}
+    <p class="errornote">
+        Sorry that file does not seem to be a CSV file (.csv). Please try another file.
+    </p>
+{% endif %}
+
+<form method="post" name="form" action="{% url admin_import_glossary item.id %}" enctype="multipart/form-data">
+    <fieldset class="module aligned">
+        <div class="form-row excel">
+            <div>
+                    <label for="id_excel" class="required">CSV File:</label>
+                    <input id="id_excel" type="file" name="excel" />
+            </div>
+        </div>
+        <div class="form-row languages  ">
+             <div>
+                <label for="id_language" class="required">Language:</label>
+                <select name="language" id="id_language">
+                    {% for language in item.languages.all %}
+                        <option value="{{ language.id }}">{{ language.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="submit-row" >
+            <input type="submit" value="Import into {{ item.name }}" class="default" name="_save" />
+            <input type="button" onclick="parent.location='../../'" value="Cancel" name="_cancel" />
+        </div>
+    </fieldset>
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Glossary Term{% endblock %}
+
+{% block content %}
+{{ term }}
+<h1>{{ term.term }}</h1>
+<p>{{ term.definition }}</p>
+
+<p><a href="">back</a></p>
+{% endblock %}

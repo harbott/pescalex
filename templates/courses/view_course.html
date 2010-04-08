@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course }}{% endblock %}
+
+{% block plain_js %}
+
+    function simpleTree()
+    {
+    
+        the_tree = $("#course_tree").tree({
+        
+            types : {
+                // all node types inherit the "default" node type
+                "default" : {
+                    clickable	: true,
+                    renameable	: false,
+                    deletable	: false,
+                    creatable	: false,
+                    draggable	: false,
+                    max_children	: -1,
+                    max_depth	: -1,
+                    valid_children	: "all",
+                    icon : { 
+                        image : "/media/plugins/jstree/demo/file.png"
+                    }                
+                },
+                "root" : {
+                    clickable	: true,
+                    renameable	: false,
+                    deletable	: false,
+                    creatable	: false,
+                    draggable	: false,
+                    max_children	: -1,
+                    max_depth	: -1,
+                    valid_children	: "all",
+                    icon : { 
+                        image : "/media/plugins/jstree/demo/file.png"
+                    }
+                },
+                "file" : {
+                    // the following three rules basically do the same
+                    clickable	: true,
+                    renameable	: false,
+                    deletable	: false,
+                    creatable	: false,
+                    draggable	: false,
+                    max_children	: -1,
+                    max_depth	: -1,
+                    valid_children	: "all",
+                    icon : { 
+                        image : "/media/plugins/jstree/demo/file.png"
+                    }
+                }
+            },
+            
+            ui : 
+            {
+                animation:200
+            },
+        
+            callback : {
+                onload : function () { 
+                    //console.log("Loaded"); 
+                },
+                onchange : function () { 
+                    //console.log("Focus changed");
+                },
+                onselect : function(node, tree)
+                {
+                    current_li = node;
+                    var page_id     = $(node).attr('page_id');
+                    var language_id = $(node).attr('language_id');
+                    
+                    
+                    window.location = '/courses/view/{{ course.id }}/'+language_id+'/'+page_id+'/';
+                    
+
+                    return false;                    
+                },
+                onmove : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
+                    
+                }
+            }
+        });
+
+    } // initTree
+
+{% endblock %}
+
+{% block onload_js %}
+    // append the language to the tree before loading the data.
+    $('#course_tree li').attr('language_id', '{{ language_id }}');
+    // init the tree
+    
+    var li_sizes = $("#basic_tree ul li").size();
+    var ii = 0;
+    var page_ids = Array();
+    
+    $('#course_tree ul li').each(function(){    
+        $me                 = $(this);        
+        $me.attr('language_id', {{ language_id }})        
+        var language_id     = {{ language_id }};
+        var page_id         = $me.attr('page_id'); 
+        page_ids.push(page_id);
+    });
+    
+    $.getJSON('{% url admin_get_language_labels %}', {language_id:{{ language_id}}, pages:page_ids} , function(data){
+       
+        $.each(data, function(i,item){
+            $('#course_tree ul li[page_id='+i+']').find('a').html('<ins>&nbsp;</ins>'+item); 
+        })
+        simpleTree();
+         $('#course_tree, #course_page_content, #course_languages').show(0);
+    });
+    
+    
+{% endblock %}
+
+{% block content %}
+    <div id="course_tree" style="float:left; display:none; ">
+        {{ course.get_html_tree|safe }}
+    </div>
+    <div id="course_page_content" style="float:left; width:400px; display:none;">
+        {% if page_content %}{{ page_content|safe }}{% endif %}
+        <div class="clear"></div>
+    </div>
+
+    <div class="clear"></div>
+    
+    <div id="course_languages" style="display:none;">
+        {% for l in course.languages.all %}
+            <a href="{% url course_view course.id l.id %}"{% if language_id == l.id %} class="selected"{% endif %}>{{ l }}</a>
+        {% endfor %}
+        
+    </div>
+
+{% endblock %}

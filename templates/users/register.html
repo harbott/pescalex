@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h1>Register</h1>
+
+<form action="{% url users_register %}" method="post" id="login">
+    {% include 'inc/form_iterator.html' %}
+	<input type="submit" value="Register" class="submit" />
+	{% csrf_token %}
+</form>
+
+<p><a href="{% url users_login %}">If you have already registered please click here to login</a></p>
+{% endblock %}

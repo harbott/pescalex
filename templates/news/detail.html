@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}News List{% endblock %}
+
+{% block content %}
+<h1>{{ news.headline }}</h1>
+<p>Author: {{ news.author }}</p>
+<p>{{ news.date|date }}</p>
+<p>{{ news.article|safe }}</p>
+
+<p><a href="{% url news_list %}">back</a></p>
+{% endblock %}
