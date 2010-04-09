@@ -1,5 +1,5 @@
 # Django production settings for pescalex project.
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

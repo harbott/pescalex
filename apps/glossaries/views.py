@@ -25,13 +25,14 @@ def glossary_list(request, glossary_id, language_slug):
 			Q(definition__icontains=search)
 		)
     else:
+		a = search
 		# Search first letter of term
 		results = results.filter(
-			term__istartswith = search,
+			term__istartswith = search
 		)
     
     # Search term
-    term = get_object_or_404(GlossaryTerm, term_id=term_id, language=language.id)
+    term = get_object_or_404(GlossaryTerm, term_id=term_id, glossary=glossary_id, language=language.id)
      
     alphabet = LETTERS
     

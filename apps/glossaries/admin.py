@@ -25,7 +25,7 @@ def import_glossary(request, id):
         if request.FILES['excel'].content_type != 'text/csv':
             error = True
         else:
-            file_path = settings.FILE_UPLOAD_TEMP_DIR +"/" + str(uuid.uuid4()) +".csv"
+            file_path = settings.FILE_UPLOAD_TEMP_DIR + str(uuid.uuid4()) +".csv"
             language = request.POST['language']
     
             # Write file to disk
