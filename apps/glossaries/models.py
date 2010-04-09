@@ -29,4 +29,4 @@ class GlossaryTerm(models.Model):
     class Meta:
         ordering = ["term"]
         verbose_name_plural = "glossary terms"
-        unique_together = (("term_id", "language"),)
+        unique_together = (("term_id", "language", "glossary"),)
