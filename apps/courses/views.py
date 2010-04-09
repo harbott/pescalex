@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 # local imports
 from pescalex.apps.courses.models import Course, CoursePageContent
 
-
 def course_view(request, course_id, language_id, page_id=0):
     try:
         language_id = int(language_id)
@@ -25,7 +24,6 @@ def course_view(request, course_id, language_id, page_id=0):
         if page_id != 0:
             page_content = CoursePageContent.objects.get(course_page=page_id, language=language_id).content
             
-        
         return render_to_response('courses/view_course.html', locals(), context_instance=RequestContext(request))
     except Course.DoesNotExist:
         return HttpResponseRedirect('/') # just forward to home page....

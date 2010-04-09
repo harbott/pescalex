@@ -1,9 +1,7 @@
 #/apps/courses/
 from django.db import models
 
-
 class CoursePage(models.Model):
-
     course = models.ForeignKey('courses.Course')
     
     def __unicode__(self):
@@ -24,9 +22,8 @@ class CoursePageContent(models.Model):
 class Course(models.Model):
     name = models.CharField(max_length=100)
     languages = models.ManyToManyField('languages.Language')    
-    serialized_tree = models.TextField()
+    serialized_tree = models.TextField(editable="False")
 
-    
     class Meta:
         ordering = ["name"]    
 
@@ -34,7 +31,6 @@ class Course(models.Model):
         return self.name    
 
     def get_html_tree(self):
-        
         stripped = self.serialized_tree.strip()
         if stripped != '':
             return stripped
